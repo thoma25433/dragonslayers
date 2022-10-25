@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" href="../../img/favicon.png">
+        <style media="screen">
+        body{
+            /* background-color: #000015; */
+            height: 100%;
+            background-image: url("img/wall.png");
+            /* background-repeat: no-repeat; */
+            /* background-size: contain; */
+        }
+        #content  {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          flex-direction: column;
+          user-select: none;
+        }
+        #game{
+          display: flex;
+        justify-content: center;
+        border: 5px solid #78756f;
+        border-radius: 5px;
+        padding-top: 1%;
+        padding-left: 2%;
+        padding-right: 5%;
+        padding-bottom: 1%;
+        flex-direction: column;
+        background-color: #b3b0aa;
+        box-shadow: 2px 2px #737170;
+        font-weight: normal;
+      }
+         #back {
+           margin-top: 0;
+           margin-bottom: 2%;
+         }
+         #settingsbox{
+           display: none;
+         }
+         #settingpic {
+          display: flex;
+          justify-content: center;
+          position: sticky;
+        }
+        #headerbox {
+          display: flex;
+          justify-content: center;
+          margin-top: 2%;
+          color: #e3e0d8;
+          font-size: 20px;
+          text-shadow: 2px 2px #737170;
+          font-weight: bold;
+        }
+        #content  {
+          display: flex;
+          justify-content: center;
+        }
+        #bossbox {
+          display: flex;
+          justify-content: center;
+          margin-top: -6%;
+        }
+        #fighters {
+            display: flex;
+            justify-content: center;
+            /* border: 2px solid black; */
+        }
+        #warrior {
+            border: 2px solid #000000;
+            margin: 5px;
+            padding: 5px;
+        }
+        #tankspot {
+            border: 2px solid #000000;
+            margin: 5px;
+            padding: 5px;
+            display: flex;
+            justify-content: center;
+        }
+        #magespot {
+            border: 2px solid #000000;
+            margin: 5px;
+            padding: 5px;
+            display: flex;
+            justify-content: center;
+        }
+        #healerspot {
+            border: 2px solid #000000;
+            margin: 5px;
+            padding: 5px;
+            display: flex;
+            justify-content: center;
+        }
+         /* .skills {
+            margin: 5px;
+        } */
+        .moves {
+            display: flex;
+            flex-direction: column;
+            margin: 5px;
+        }
+        #bskill {
+          display: flex;
+          justify-content: center;
+          margin-top: -3%;
+        }
+
+        </style>
+        <script>
+        {
+        let tank = 0;
+        let mage = 0;
+        let healer = 0;
+        let warriorHp = 525;
+        let tankHp = 647;
+        let mageHp = 346;
+        let healerHp = 354;
+        let warriorAtk = 147;
+        let tankAtk = 102;
+        let mageAtk = 173;
+        let healerAtk = 113;
+        let bossHp = 500;
+        let bossAtk = 250;
+        let warriorLvl = 1;
+        let wcurr = 0;
+        let wmax = 100;
+        let tankLvl = 1;
+        let tcurr = 0;
+        let tmax = 100;
+        let mageLvl = 1;
+        let mcurr = 0;
+        let mmax = 100;
+        let healerLvl = 1;
+        let hcurr = 0;
+        let hmax = 100;
+        let bossLvl = 1;
+        let wskillscd = 10;
+        let tskillscd = 17;
+        let mskillscd = 12;
+        let hskillscd = 8;
+        let xpgain = 100;
+        let gold = 0;
+        let goldgain = 50;
+      }
+
+        function save() {
+            save = {
+              warriorHp: warriorHp,
+              tankHp: tankHp,
+              mageHp: mageHp,
+              healerHp: healerHp,
+              warriorAtk: warriorAtk,
+              tankAtk: tankAtk,
+              mageAtk: mageAtk,
+              healerAtk: healerAtk,
+              bossHp: bossHp,
+              bossAtk: bossAtk,
+              warriorLvl: warriorLvl,
+              tankLvl: tankLvl,
+              mageLvl: mageLvl,
+              healerLvl: healerLvl,
+              bossLvl: bossLvl,
+              wskillscd: wskillscd,
+              tskillscd: tskillscd,
+              hskillscd: hskillscd,
+            }
+            localStorage.setItem("save",JSON.stringify(save));
+        }
+
+        function load() {
+          savegame = JSON.parse(localStorage.getItem("save"));
+          if (typeof savegame.warriorHp !== "undefined") warriorHp = savegame.warriorHp;
+          if (typeof savegame.wskillscd !== "undefined") wskillscd = savegame.wskillscd;
+          if (typeof savegame.bossHp !== "undefined") bossHp = savegame.bossHp;
+          // if (typeof savegame.gen1Cost !== "undefined") gen1Cost = savegame.gen1Cost;
+          // if (typeof savegame.gen1gain !== "undefined") gen1gain = savegame.gen1gain;
+          // if (typeof savegame.gen2s !== "undefined") gen2s = savegame.gen2s;
+          // if (typeof savegame.gen2Cost !== "undefined") gen2Cost = savegame.gen2Cost;
+          // if (typeof savegame.gen2gain !== "undefined") gen2gain = savegame.gen2gain;
+          // if (typeof savegame.gen3s !== "undefined") gen3s = savegame.gen3s;
+          // if (typeof savegame.gen3Cost !== "undefined") gen3Cost = savegame.gen3Cost;
+          // if (typeof savegame.gen3gain !== "undefined") gen3gain = savegame.gen3gain;
+          // if (typeof savegame.prestigeLevel !== "undefined") prestigeLevel = savegame.prestigeLevel;
+          // if (typeof savegame.prestigeCost !== "undefined") prestigeCost = savegame.prestigeCost;
+        }
+
+        function delSave() {
+          localStorage.removeItem("save");
+          location.reload();
+        }
+        function tankz() {
+          if (tank == 0){
+            document.getElementById("tanks").style.display = "none";
+          }else{
+            document.getElementById("tanks").style.display = "block";
+            document.getElementById("tankspot").style.display = "none";
+          }
+      }
+      function magez() {
+        if (mage == 0){
+          document.getElementById("mages").style.display = "none";
+        }else{
+          document.getElementById("mages").style.display = "block";
+          document.getElementById("magespot").style.display = "none";
+        }
+    }
+    function healerz() {
+      if (mage == 0){
+        document.getElementById("healers").style.display = "none";
+      }else{
+        document.getElementById("healers").style.display = "block";
+        document.getElementById("healerpot").style.display = "none";
+      }
+  }
+      function buytank() {
+        if (gold == 100) {
+          tank++
+        }else{
+        }
+      }
+      function buymage() {
+        if (gold == 1000) {
+          mage++
+        }else{
+        }
+      }
+      function buyhealer() {
+        if (gold == 5000) {
+          healer++
+        }else{
+        }
+      }
+        function cd1() {
+          if (wskillscd == 0){
+            return;
+          }else{
+          wskillscd -= 1;
+        }
+        }
+        function cd2() {
+          if (tskillscd == 0){
+            return;
+          }else{
+          tskillscd -= 1;
+        }
+        }
+        function cd3() {
+          if (mskillscd == 0){
+            return;
+          }else{
+          mskillscd -= 1;
+        }
+        }
+        function cd4() {
+          if (hskillscd == 0){
+            return;
+          }else{
+          hskillscd -= 1;
+        }
+        }
+        function cd() {
+          cd1();
+          cd2();
+          cd3();
+          cd4();
+        }
+        function update() {
+            document.getElementById("showGold").innerText = gold;
+            document.getElementById("wlvl").innerText = warriorLvl;
+            document.getElementById("whp").innerText = warriorHp;
+            document.getElementById("watk").innerText = warriorAtk;
+            document.getElementById("skills1cd").innerText = wskillscd;
+            document.getElementById("bhp").innerText = bossHp;
+            document.getElementById("blvl").innerText = bossLvl;
+            document.getElementById("tlvl").innerText = tankLvl;
+            document.getElementById("thp").innerText = tankHp;
+            document.getElementById("tatk").innerText = tankAtk;
+            document.getElementById("skills2cd").innerText = tskillscd;
+            // document.getElementById("truearts1cd").innerText = gen1gain;
+            // document.getElementById("wcurrent").innerText = gen2s;
+            // document.getElementById("gen2price").innerText = gen2Cost;
+            // document.getElementById("gen2add").innerText = gen2gain;
+            // document.getElementById("gen3num").innerText = gen3s;
+            // document.getElementById("gen3price").innerText = gen3Cost;
+            // document.getElementById("gen3add").innerText = gen3gain;
+            // document.getElementById("showpsec").innerText = pointPerSecond;
+            // document.getElementById("showplvl").innerText = prestigeLevel;
+            // document.getElementById("showplvl2").innerText = prestigeLevel;
+            // document.getElementById("prescost").innerText = prestigeCost;
+            bossdeath();
+            tankz();
+            healerz();
+            magez();
+            if (gold < 100) {
+              document.getElementById('tankbut').style.backgroundColor = '#f55b5b';
+            }else {
+              document.getElementById('tankbut').style.backgroundColor = '#4CAF50';
+            }
+            if (gold < 1000) {
+              document.getElementById('magebut').style.backgroundColor = '#f55b5b';
+            }else {
+              document.getElementById('magebut').style.backgroundColor = '#4CAF50';
+            }
+            if (gold < 5000) {
+              document.getElementById('healerbut').style.backgroundColor = '#f55b5b';
+            }else {
+              document.getElementById('healerbut').style.backgroundColor = '#4CAF50';
+        }
+      }
+        setInterval(function() {
+            update();
+
+          }, 10)
+
+          setInterval(function() {
+            cd();
+            // save();
+
+          }, 1000)
+
+
+        function skills1() {
+          if (wskillscd == 0){
+          bossHp -= warriorAtk;
+          wskillscd = 10;
+          update();
+        }else{
+          return}
+        }
+
+        function skills2() {
+          if (tskillscd == 0){
+          bossHp -= tankAtk;
+          tskillscd = 17;
+          update();
+        }else{
+          return}
+        }
+
+        function xpgive() {
+          wcurr = xpgain *= bossLvl;
+          tcurr = xpgain *= bossLvl;
+          mcurr = xpgain *= bossLvl;
+          hcurr = xpgain *= bossLvl;
+        }
+        function bossdeath() {
+          if (bossHp <= 0){
+          xpgive();
+          gold = goldgain * bossLvl
+          bossLvl += 1;
+          bossHp = 500 * bossLvl;
+        }else {
+          return
+        }
+        }
+
+        function setting() {
+            document.getElementById("settingsbox").style.display = "block";
+            document.getElementById("gam2").style.display = "none";
+          }
+
+          function back() {
+              document.getElementById("settingsbox").style.display = "none";
+              document.getElementById("gam2").style.display = "block";
+            }
+</script>
+  <title>Dungeon Masters</title>
+    </head>
+    <body onload='load()'>
+      <div id="content">
+        <div id="headerbox">
+            <h1>Dungeon Masters</h1>
+          </div>
+            <div id="game">
+              <img id='settingpic' src="img/gear.png" alt="Settings" width="50px" length="50xp" onclick='setting()'>
+              <div id="settingsbox">
+                  <br>
+                  <button id='back' onclick='back()'> &lt-- </button>
+                  <div id="savebox">
+                  <button onclick="save()">Save Game</button>
+                  <button onclick="load()">Load Save</button>
+                  <button onclick="delSave()">Delete Save</button>
+                  <div id='movehelp'>
+                  <h3>Move Explanations</h3>
+                  <h6>Warrior Skill: DMG = Atk</h6>
+                  <h6>Warrior Arts: DMG = Atk * 5 and buffs DMG by 10%</h6>
+                  <h6>Warrior True Arts:  DMG = Atk * 30 and buffs all DMG by 25% for 25s and gives DMG negation for 25s</h6>
+                  <h6>Tank Skill: DMG negation = Atk, and taunts for 8 seconds</h6>
+                  <h6>Tank Arts: DMG negation = Atk * 15 for 15s and hits for Atk * 5</h6>
+                  <h6>Tank True Arts: DMG negation = Atk * 40, buffs all DMG by 30%, and taunts for 30 seconds</h6>
+                  <h6>Mage Skill:</h6>
+                  <h6>Mage Arts:</h6>
+                  <h6>Mage True Arts:</h6>
+                  <h6>Healer Skill:</h6>
+                  <h6>Healer Arts:</h6>
+                  <h6>Healer True Arts:</h6>
+                  </div>
+              </div>
+              </div>
+              <div id="gam2">
+
+                <div id="bossbox">
+                    <h2>Boss HP: <span id='bhp'>2500</span></h2>
+                    <h5>Lvl: <span id='blvl'>1</span></h5>
+                </div>
+                <h6 id='bskill'>Skill: </h6>
+                <div id="fighters">
+                    <div id="warrior">
+                        <h3>Warrior</h3>
+                        <h5>Level <span id='wlvl'>1</span></h5>
+                        <h6>HP: <span id='whp'>525</span>/<span id=wmaxhp>525</span></h6>
+                        <h6>Atk: <span id='watk'>147</span></h6>
+                        <div class="moves">
+                        <button onclick="skills1()">Skill CD: <span id='skills1cd'>10</span></button>
+                        <button onclick="arts1()">Arts CD: <span id='arts1cd'>26</span></button>
+                        <button onclick="truearts1()">True Arts CD: <span id='truearts1cd'>57</span></button>
+                        <h6>XP: <span id='wcurrent'>0</span>/<span id='wmax'>100</span></h6>
+                    </div>
+                    </div>
+                    <div id=tankspot>
+                      <button id='tankbut' onclick='buytank()'>Buy Tank (100 Gold)</button>
+                    <div id="tanks">
+                        <h3>Tank</h3>
+                        <h5>Level <span id='tlvl'>1</span></h5>
+                        <h6>HP: <span id='thp'>647</span>/<span id=tmaxhp>647</span></h6>
+                        <h6>Atk: <span id='tatk'>102</span></h6>
+                        <div class="moves">
+                        <button onclick="skills2()">Skill CD: <span id='skills2cd'>17</span></button>
+                        <button onclick="arts2()">Arts CD: <span id='arts2cd'>56</span></button>
+                        <button onclick="truearts2()">True Arts CD: <span id='truearts1cd'>86</span></button>
+                        <h6>XP: <span id='tcurrent'>0</span>/<span id='tmax'>100</span></h6>
+                      </div>
+                    </div>
+                    </div>
+                    <div id="magespot">
+                      <button id='magebut' onclick='buymage()'>Buy Mage (1000 Gold)</button>
+                    <div id="mages">
+                        <h3>Mage</h3>
+                        <h5>Level <span id='mlvl'>1</span></h5>
+                        <h6>HP: <span id='mhp'>346</span>/<span id=mmaxhp>346</span></h6>
+                        <h6>Atk: <span id='matk'>173</span></h6>
+                        <div class="moves">
+                        <button onclick="skills3()">Skill CD: 12</button>
+                        <button onclick="arts3()">Arts CD: 35</button>
+                        <button onclick="truearts3()">True Arts CD: 64</button>
+                        <h6>XP: <span id='mcurrent'>0</span>/<span id='mmax'>100</span></h6>
+                    </div>
+                    </div>
+                    </div>
+                    <div id="healerspot">
+                      <button id='healerbut' onclick='buyhealer()'>Buy Healer (5000 Gold)</button>
+                    <div id="healers">
+                        <h3>Healer</h3>
+                        <h5>Level <span id='hlvl'>1</span></h5>
+                        <h6>Atk: <span id='hhp'>354</span>/<span id=hmaxhp>354</span></h6>
+                        <h6>Atk: <span id='hatk'>113</span></h6>
+                        <div class="moves">
+                        <button onclick="skills4()">Skill CD: 8</button>
+                        <button onclick="arts4()">Arts CD: 42</button>
+                        <button onclick="truearts4()">True Arts CD: 70</button>
+                        <h6>XP: <span id='hcurrent'>0</span>/<span id='hmax'>100</span></h6>
+                    </div>
+                    </div>
+                    </div>
+                </div>
+                <div id="inv">
+                    <p class="invbox">Gold :&nbsp<span id="showGold">0</span></p>
+                </div>
+              </div>
+
+            </div>
+              </div>
+            </div>
+    </body>
+</html>
